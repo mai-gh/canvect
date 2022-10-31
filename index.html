@@ -13,25 +13,33 @@
     </style>
   </head>
   <body>
-    <canvas id='canvas' width="300" height="300" />
+    <canvas id='canvas' width="600" height="600" />
     <script>
       const sleep = ms => new Promise(r => setTimeout(r, ms));
+      let colorBool = true;
       const ctx = document.getElementById('canvas').getContext('2d');
 
       const draw = async () => {
-        ctx.strokeStyle = "blue";
+        colorBool ? ctx.strokeStyle = "blue" : ctx.strokeStyle = "red"
+//        ctx.strokeStyle = "blue";
         ctx.save();
-        ctx.translate(50, 50);
+        ctx.translate(300, 300);
         for (let i = 0; i < 12; i++) {
           ctx.beginPath();
           ctx.moveTo(0, -0);
-          ctx.lineTo(0, -20);
+          ctx.lineTo(0, -100);
           ctx.rotate(Math.PI / 6);
           ctx.stroke();
           await sleep(100);
         }
+        for (let i = 0; i < 12; i++) {
+          ctx.rotate(Math.PI / 6);
+          ctx.clearRect(-1, 0, 2, -100);
+          await sleep(100);
+        }
         ctx.restore();
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        colorBool = !colorBool;
+//        ctx.clearRect(0, 0, canvas.width, canvas.height);
         window.requestAnimationFrame(draw);
       }
 
