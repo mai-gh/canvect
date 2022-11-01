@@ -9,6 +9,7 @@
         overflow: hidden;
         color: #fff;
         background-color: #111;
+
       }
     </style>
   </head>
@@ -20,6 +21,12 @@
       let counter = 0;
       const rotateAmount = (Math.PI / 6);
       let rotatePos = 0;
+
+      let secondsPassed;
+      let oldTimeStamp = 0;
+      let fps;
+
+
       const ctx = document.getElementById('canvas').getContext('2d');
       ctx.strokeStyle = "blue"
       ctx.save();
@@ -34,9 +41,29 @@
         cursor.y = e.clientY;
       });
 
-      const draw = async () => {
-        ctx.setTransform(1, 0, 0, 1, 0, 0); // reset translation instead of save / restore
+      const draw = async (timeStamp) => {
+        secondsPassed = (timeStamp - oldTimeStamp) / 1000;
+        oldTimeStamp = timeStamp;
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0); // reset translation instead of save / restore
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Calculate fps
+    fps = Math.round(1 / secondsPassed);
+
+
+    ctx.font = '16px Sans-serif';
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 8;
+    ctx.strokeText(fps, 10, 30);
+    ctx.fillStyle = 'white';
+    ctx.fillText(fps, 10, 30);
+
+        ctx.setTransform(1, 0, 0, 1, 0, 0); // reset translation instead of save / restore
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "blue"
+
+        ctx.setTransform(1, 0, 0, 1, 0, 0); // reset translation instead of save / restore
         ctx.translate(cursor.x, cursor.y);
         if ( counter === 11 ) {
           counter = 0
@@ -51,7 +78,7 @@
         ctx.moveTo(0, -24);
         ctx.lineTo(0, -32);
         ctx.stroke();
-        await sleep(30);
+        await sleep(40);
 
         window.requestAnimationFrame(draw);
       }
