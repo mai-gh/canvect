@@ -17,29 +17,42 @@
     <script>
       const sleep = ms => new Promise(r => setTimeout(r, ms));
       let colorBool = true;
+      let counter = 0;
+      const rotateAmount = (Math.PI / 6);
+      let rotatePos = 0;
       const ctx = document.getElementById('canvas').getContext('2d');
+      ctx.strokeStyle = "blue"
+      ctx.save();
+      ctx.translate(300, 300);
+
+      const cursor = {
+        x: innerWidth / 2,
+        y: innerHeight / 2,
+      };
+      addEventListener("mousemove", (e) => {
+        cursor.x = e.clientX;
+        cursor.y = e.clientY;
+      });
 
       const draw = async () => {
-        colorBool ? ctx.strokeStyle = "blue" : ctx.strokeStyle = "red"
-//        ctx.strokeStyle = "blue";
-        ctx.save();
-        ctx.translate(300, 300);
-        for (let i = 0; i < 12; i++) {
-          ctx.beginPath();
-          ctx.moveTo(0, -0);
-          ctx.lineTo(0, -100);
-          ctx.rotate(Math.PI / 6);
-          ctx.stroke();
-          await sleep(100);
+        ctx.setTransform(1, 0, 0, 1, 0, 0); // reset translation instead of save / restore
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.translate(cursor.x, cursor.y);
+        if ( counter === 11 ) {
+          counter = 0
+          rotatePos = 0;
+        } else { 
+          counter++;
         }
-        for (let i = 0; i < 12; i++) {
-          ctx.rotate(Math.PI / 6);
-          ctx.clearRect(-1, 0, 2, -100);
-          await sleep(100);
-        }
-        ctx.restore();
-        colorBool = !colorBool;
-//        ctx.clearRect(0, 0, canvas.width, canvas.height);
+ 
+        ctx.beginPath();
+        rotatePos = rotatePos + rotateAmount;
+        ctx.rotate(rotatePos);
+        ctx.moveTo(0, -24);
+        ctx.lineTo(0, -32);
+        ctx.stroke();
+        await sleep(30);
+
         window.requestAnimationFrame(draw);
       }
 
