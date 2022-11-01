@@ -16,35 +16,37 @@
   <body>
     <canvas id='canvas' width="600" height="600" />
     <script>
-      const sleep = ms => new Promise(r => setTimeout(r, ms));
       let colorBool = true;
-      let counter = 0;
       let initBool = true;
+
+      const stepMS = 40;
       const rotateAmount = (Math.PI / 6);
-      let rotatePos = 0;
-      let secondsPassed;
-      let oldTimeStamp = 0;
+      let secondsPassed = 0
       let timeSnap = 0;
-      let fps;
-      const waitTime = 100;
+      let oldTimeStamp = 0   
+      let fps = 0;
+
       const ctx = document.getElementById('canvas').getContext('2d');
       ctx.strokeStyle = "blue"
+      ctx.lineWidth = 1;
       ctx.save();
       ctx.translate(300, 300);
       const cursor = {
-//        x: innerWidth / 2,
-//        y: innerHeight / 2,
-        x: 200,
-        y: 200,
+        x: 300,
+        y: 300,
       };
+
       addEventListener("mousemove", (e) => {
         cursor.x = e.clientX;
         cursor.y = e.clientY;
       });
 
-      const displayFPS = () => {
-        //ctx.setTransform(1, 0, 0, 1, 0, 0); // reset translation instead of save / restore
-        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const displayFPS = (timeStamp) => {
+        secondsPassed = (timeStamp - oldTimeStamp) / 1000;
+        oldTimeStamp = timeStamp;
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0); // reset translation instead of save / restore
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         fps = Math.round(1 / secondsPassed);
         ctx.font = '16px Sans-serif';
         ctx.strokeStyle = 'black';
@@ -52,15 +54,11 @@
         ctx.strokeText(fps, 10, 30);
         ctx.fillStyle = 'white';
         ctx.fillText(fps, 10, 30);
-
-        
+        ctx.restore();
       }
-
 
       const line = () => {
         ctx.beginPath();
-//        ctx.rotate(rotatePos);
-//        rotatePos += rotateAmount;
         ctx.moveTo(0, -16);
         ctx.lineTo(0, -32);
         ctx.stroke();
@@ -69,222 +67,42 @@
       const draw = async (timeStamp) => {
         ctx.setTransform(1, 0, 0, 1, 0, 0); // reset translation instead of save / restore
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-//        secondsPassed = (timeStamp - oldTimeStamp) / 1000;
-//        displayFPS();
-
-
-
-
-//        ctx.setTransform(1, 0, 0, 1, 0, 0); // reset translation instead of save / restore
-        ctx.lineWidth = 1;
-//        ctx.strokeStyle = "blue"
         ctx.translate(cursor.x, cursor.y);
 
+        displayFPS(timeStamp);
 
-
-        
-
-/*
-
-        if (counter >= 0 ) {
-          line();
-          if (counter === 0) {
-            counter++;
-            timeSnap = timeStamp; 
+        if (initBool) {
+          timeSnap = timeStamp;
+          initBool = false;
+          if (colorBool) {
+            ctx.strokeStyle = "blue"  
+          } else {
+            ctx.strokeStyle = "red"
           }
         }
-        if ((counter >= 1) && ((timeStamp - timeSnap) > 100)) {
-          ctx.rotate(rotateAmount);
-          line();
-          if (counter === 1) {
-            counter++;
-          }
-        }
-
-        if ((counter >= 2) && ((timeStamp - timeSnap) > 200)) {
-          ctx.rotate(rotateAmount);
-          line();
-          if (counter === 2) {
-            counter++;
-          }
-        }
-
-        if ((counter >= 3) && ((timeStamp - timeSnap) > 300)) {
-          ctx.rotate(rotateAmount);
-          line();
-          if (counter === 3) {
-            counter++;
-          }
-        }
-
-        if ((counter >= 4) && ((timeStamp - timeSnap) > 400)) {
-          ctx.rotate(rotateAmount);
-          line();
-          if (counter === 4) {
-            counter++;
-          }
-        }
-
-        if ((counter >= 5) && ((timeStamp - timeSnap) > 500)) {
-          ctx.rotate(rotateAmount);
-          line();
-          if (counter === 5) {
-            counter++;
-          }
-        }
-
-        if ((counter >= 6) && ((timeStamp - timeSnap) > 600)) {
-          ctx.rotate(rotateAmount);
-          line();
-          if (counter === 6) {
-            counter++;
-          }
-        }
-
-        if ((counter >= 7) && ((timeStamp - timeSnap) > 700)) {
-          ctx.rotate(rotateAmount);
-          line();
-          if (counter === 7) {
-            counter++;
-          }
-        }
-
-        if ((counter >= 8) && ((timeStamp - timeSnap) > 800)) {
-          ctx.rotate(rotateAmount);
-          line();
-          if (counter === 8) {
-            counter++;
-          }
-        }
-
-        if ((counter >= 9) && ((timeStamp - timeSnap) > 900)) {
-          ctx.rotate(rotateAmount);
-          line();
-          if (counter === 9) {
-            counter++;
-          }
-        }
-
-        if ((counter >= 10) && ((timeStamp - timeSnap) > 1000)) {
-          ctx.rotate(rotateAmount);
-          line();
-          if (counter === 10) {
-            counter++;
-          }
-        }
-
-        if ((timeStamp - timeSnap) > 1100) {
-          ctx.rotate(rotateAmount);
-          line();
-        }
-
-        if ((timeStamp - timeSnap) > 1200) {
-          ctx.rotate(rotateAmount);
-          ctx.clearRect(-1, 0, 2, -100);
-        }
-
-        if ((timeStamp - timeSnap) > 1300) {
-          ctx.rotate(rotateAmount);
-          ctx.clearRect(-1, 0, 2, -100);
-        }
-
-*/
-
-
-if (initBool) {
-  timeSnap = timeStamp;
-  initBool = false;
-  if (colorBool) {
-    ctx.strokeStyle = "blue"  
-  } else {
-    ctx.strokeStyle = "red"
-  }
-}
-
-  const stepMS = 40;
-
-  for (let i = 0; i < 12; i++) {
-
-if ((timeStamp - timeSnap) > (i * stepMS)) {
-      line();
-      ctx.rotate(rotateAmount);
-    }
-  }
-        
-  for (let i = 12; i <= 24; i++) {
-
-    if ((i === 24) && ((timeStamp - timeSnap) > (i * stepMS))) {
-      initBool = true;
-      colorBool = !colorBool;
-      break;
-    }
-
-
-    if ((timeStamp - timeSnap) > (i * stepMS)) {
-      ctx.clearRect(-1, 0, 2, -100);
-      ctx.rotate(rotateAmount);
-    }
-  }
-        
-
   
-
-
-/*
-        line();
-        ctx.rotate(rotateAmount);
-
-        line();
-        ctx.rotate(rotateAmount);
-
-        line();
-        ctx.rotate(rotateAmount);
-
-        line();
-        ctx.rotate(rotateAmount);
-
-        line();
-        ctx.rotate(rotateAmount);
-
-        line();
-        ctx.rotate(rotateAmount);
-
-        line();
-        ctx.rotate(rotateAmount);
-
-        line();
-        ctx.rotate(rotateAmount);
-
-        line();
-        ctx.rotate(rotateAmount);
-
-        line();
-        ctx.rotate(rotateAmount);
-
-        line();
-        ctx.rotate(rotateAmount);
-*/
-
-//        for (let i = 0; i < 12; i++) {
-//        ctx.beginPath();
-//        ctx.rotate(rotatePos);
-//        rotatePos += rotateAmount;
-//        ctx.moveTo(0, -24);
-//        ctx.lineTo(0, -32);
-//        ctx.stroke();
-//        }
-
-
-/*        if ( counter === 11 ) {
-          counter = 0
-          rotatePos = 0;
-        } else { 
-          counter++;
+        for (let i = 0; i < 12; i++) {
+          if ((timeStamp - timeSnap) > (i * stepMS)) {
+            line();
+            ctx.rotate(rotateAmount);
+          }
         }
-*/
-        oldTimeStamp = timeStamp;
+              
+        for (let i = 12; i <= 24; i++) {
+          if ((i === 24) && ((timeStamp - timeSnap) > (i * stepMS))) {
+            initBool = true;
+            colorBool = !colorBool;
+            break;
+          }
+          if ((timeStamp - timeSnap) > (i * stepMS)) {
+            ctx.clearRect(-1, 0, 2, -100);
+            ctx.rotate(rotateAmount);
+          }
+        }
+
         window.requestAnimationFrame(draw);
       }
+
       window.requestAnimationFrame(draw);
     </script>
   </body>
