@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vector Shaper</title>
+    <link href="data:image/x-icon;" rel="icon" />
+    <style>
+      * {
+        border: 1px solid darkkhaki;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        color: #fff;
+        background-color: #111;
+      }
+    </style>
+  </head>
+  <body>
+    <p>quadraticCurveTo:</p>
+
+    <div style="display: inline-block;">
+
+      <div>
+        <input type="number" id="spx" name="spx" min="0" max="600" value="300">
+        <label for="spx">Start Point X</label>
+      </div>
+  
+      <div>
+        <input type="number" id="spy" name="spy" min="0" max="600" value="300">
+        <label for="spy">Start Point Y</label>
+      </div>
+  
+      <div>
+        <input type="number" id="cpx" name="cpx" min="0" max="600" value="215">
+        <label for="cpx">Control Point X</label>
+      </div>
+  
+      <div>
+        <input type="number" id="cpy" name="cpy" min="0" max="600" value="445">
+        <label for="cpy">Control Point Y</label>
+      </div>
+  
+      <div>
+        <input type="number" id="epx" name="epx" min="0" max="600" value="300">
+        <label for="epx">End Point X</label>
+      </div>
+  
+      <div>
+        <input type="number" id="epy" name="epy" min="0" max="600" value="400">
+        <label for="epy">End Point Y</label>
+      </div>
+
+    </div>
+
+
+    <canvas id='canvas' width="600" height="600" style="display: inline-block;"/>
+    <script>
+      const ctx = document.getElementById('canvas').getContext('2d');
+      ctx.strokeStyle = 'orange';
+
+      const draw = (timeStamp) => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.moveTo(document.getElementById('spx').value, document.getElementById('spy').value);
+        ctx.strokeStyle = 'orange';
+        ctx.quadraticCurveTo(document.getElementById('cpx').value, 
+                             document.getElementById('cpy').value,
+                             document.getElementById('epx').value,
+                             document.getElementById('epy').value);
+        ctx.moveTo(document.getElementById('spx').value, document.getElementById('spy').value);
+        ctx.strokeStyle = 'blue';
+        ctx.quadraticCurveTo( (300 - document.getElementById('cpx').value) + 300, 
+                             document.getElementById('cpy').value,
+                             document.getElementById('epx').value,
+                             document.getElementById('epy').value);
+
+        ctx.stroke();
+
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+
+    </script>
+  </body>
+</html>
