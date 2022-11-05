@@ -58,9 +58,25 @@ const ctx = canv.getContext("2d");
 ctx.lineWidth = 5;
 const funcQ = [];
 const deselectAll = () => {for (const s of funcQ) s.selected = false};
+const getAllSelected = () => {
+  const selArr = [];
+  for (const s of funcQ) {
+    if (s.selected) selArr.push(s);
+  }
+  return selArr;
+};
+
+const getStrokeUnderCursor = () => {
+  for (const s of funcQ) {
+    if (ctx.isPointInStroke(s.path, cursor.x, cursor.y)) {
+      return s;
+    }
+  }
+}
+
 
 let clickCounter = 0;
-canv.onclick = () => {
+canv.onclick = (e) => {
   clickCounter++;
   if (strokeSelectList.value === "lineTo") {
     if (clickCounter === 1) {
@@ -73,6 +89,8 @@ canv.onclick = () => {
         sy: cursor.y,
         lx: function () { return cursor.x; },
         ly: function () { return cursor.y; },
+        startBox: null,
+        endBox: null,
         func: function () {
           ctx.save();
           if (this.selected) ctx.strokeStyle = "White";
@@ -82,11 +100,14 @@ canv.onclick = () => {
           this.editing ? ctx.stroke() : ctx.stroke(this.path);
           if (this.selected) {
             ctx.strokeStyle = "Red";
-            const sr = new Path2D();
-            const sz = 10;
-            sr.rect(this.sx - sz / 2, this.sy - sz / 2, sz, sz);
-            sr.rect(this.lx() - sz / 2, this.ly() - sz / 2, sz, sz);
-            ctx.stroke(sr);
+            ctx.lineWidth = 1; 
+            const boxSize = 10;
+            this.startBox = new Path2D();
+            this.endBox = new Path2D();
+            this.startBox.rect(this.sx - boxSize / 2, this.sy - boxSize / 2, boxSize, boxSize);
+            this.endBox.rect(this.lx() - boxSize / 2, this.ly() - boxSize / 2, boxSize, boxSize);
+            ctx.stroke(this.startBox);
+            ctx.stroke(this.endBox);
           }
           ctx.restore();
         },
@@ -103,10 +124,45 @@ canv.onclick = () => {
       clickCounter = 0;
     }
   } else if (strokeSelectList.value === "selection") {
-    for (const s of funcQ) s.selected = false;
-    for (const s of funcQ) {
-      console.log(s.time, ctx.isPointInStroke(s.path, cursor.x, cursor.y));
-      if (ctx.isPointInStroke(s.path, cursor.x, cursor.y)) s.selected = true;
+    if (clickCounter === 1) {
+      deselectAll();
+      for (const s of funcQ) {
+        if (ctx.isPointInStroke(s.path, cursor.x, cursor.y)) {
+          s.selected = true;
+        }
+      }
+      if (getAllSelected().length === 1) {
+      } else {
+        clickCounter = 0;
+      }
+    } else if (clickCounter === 2) {
+      if (getAllSelected().length === 1) {
+        const uc = getStrokeUnderCursor();
+        if ((typeof uc === 'object') && ('selected' in uc) && (uc.selected)) {
+          // we are interacting with already selected item
+          console.log(typeof getStrokeUnderCursor());
+          if (ctx.isPointInPath(uc.endBox, cursor.x, cursor.y)) {
+            uc.editing = true;
+            uc.lx = function () { return cursor.x; };
+            uc.ly = function () { return cursor.y; }
+          }
+        } else {
+          deselectAll();
+          clickCounter = 0;
+        }
+      }
+    } else if (clickCounter === 3) {
+      const lx = cursor.x;
+      const ly = cursor.y;
+      const [s] = getAllSelected();
+      s.lx = () => lx;
+      s.ly = () => ly;
+      s.path = new Path2D();
+      s.path.moveTo(s.sx, s.sy);
+      s.path.lineTo(s.lx(), s.ly());
+      s.editing = false;
+      clickCounter = 0;
+      deselectAll();
     }
   }
 };
