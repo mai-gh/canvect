@@ -93,30 +93,10 @@ let mtox = 0;
 let mtoy = 0;
 let selected = null;
 
-canv.onclick = () => {
-  clickCounter++;
-  if (strokeSelectList.value === 'lineTo') {
-    if (clickCounter === 1) {
-      mtox = cursor.x;
-      mtoy = cursor.y;
-      const mx = mtox;
-      const my = mtoy
-      funcQ.push(() => {
-        ctx.beginPath();
-        ctx.moveTo(mx, my);
-        ctx.lineTo(cursor.x, cursor.y);
-        ctx.stroke();
-      })
-    } else if (clickCounter === 2) {
-      let mx = mtox;
-      let my = mtoy
-      let lx = cursor.x;
-      let ly = cursor.y; 
-      funcQ.pop();
-      //funcQ.push(() => {
-      const strokeIndex = funcQ.length;
-      const strokeCreationTime = timeStamp;
-      funcQ.push(() => {
+strokeSelectList.onchange = () => { clickCounter = 0 };
+
+
+const completedLine = (mx, my, lx, ly, strokeCreationTime) => () => {
         ctx.beginPath();
         ctx.moveTo(mx, my);
         ctx.lineTo(lx, ly);
@@ -147,12 +127,58 @@ canv.onclick = () => {
             }
         }
         ctx.stroke();
-      })
+}
+
+
+canv.onclick = () => {
+  clickCounter++;
+  if (strokeSelectList.value === 'lineTo') {
+    if (clickCounter === 1) {
+      funcQ.push({
+        path: new Path2D(),
+        time: timeStamp,
+        selected: false,
+        sx: cursor.x,
+        sy: cursor.y,
+        lx: function () {return cursor.x},
+        ly: function () {return cursor.y},
+        func: function ()  {
+          ctx.save();
+          if (this.selected) ctx.strokeStyle = 'White';
+          ctx.beginPath();
+          //this.path.moveTo(this.sx, this.sy);
+          //this.path.lineTo(this.lx(), this.ly());
+          //ctx.stroke(this.path);
+          ctx.moveTo(this.sx, this.sy);
+          ctx.lineTo(this.lx(), this.ly());
+          ctx.stroke();
+          ctx.restore();
+        },
+      });
+    } else if (clickCounter === 2) {
+      const lx = cursor.x;
+      const ly = cursor.y;
+      const s = funcQ[funcQ.length - 1];
+      //funcQ[funcQ.length - 1].lx = () => lx;
+      //funcQ[funcQ.length - 1].ly = () => ly;
+      s.lx = () => lx;
+      s.ly = () => ly;
+      s.path.moveTo(s.sx, s.sy);
+      s.path.lineTo(s.lx(), s.ly());
+//      ctx.strokeStyle = 'DarkGreen';
+//      ctx.stroke(s.path)
+//      ctx.strokeStyle = 'Blue';
+//      funcQ[funcQ.length - 1].path.moveTo(this.sx, this.sy)
       clickCounter = 0;
-    }
+    } 
   } else if (strokeSelectList.value === 'selection') {
-//    selected = null;
-//    clickCounter = 0;
+     for (const s of funcQ) s.selected = false;
+     for (const s of funcQ) {
+       console.log(s.time, ctx.isPointInStroke(s.path, cursor.x, cursor.y));
+       if (ctx.isPointInStroke(s.path, cursor.x, cursor.y)) s.selected = true;
+
+     }
+
   }
 }
 
@@ -180,9 +206,17 @@ ctx.strokeStyle = "blue";
 const draw = (ts) => {
   timeStamp = ts;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.clearRect(0, 0, canv.width, canv.height);
+//  ctx.clearRect(0, 0, canv.width, canv.height);
+  ctx.fillStyle = "rgba(0, 0, 0, 1)";
+  ctx.fillRect(0, 0, canv.width, canv.height);
+
   if (statusCheckbox.checked) displayStatus();
-  for (const func of funcQ) func();
+  for (const f of funcQ) f.func();
+//          ctx.beginPath();
+//          ctx.clearRect(0, 0, canv.width, canv.height);
+//          ctx.moveTo(mtox, mtoy);
+//          ctx.lineTo(cursor.x, cursor.y);
+//          ctx.stroke();
   window.requestAnimationFrame(draw);
 }
 
