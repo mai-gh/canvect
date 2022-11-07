@@ -85,18 +85,19 @@ canv.onclick = (e) => {
         time: timeStamp,
         selected: false,
         editing: true,
-        sx: cursor.x,
-        sy: cursor.y,
+        sx: ((xx) => () => xx)(cursor.x),
+        sy: ((yy) => () => yy)(cursor.y),
         lx: function () { return cursor.x; },
         ly: function () { return cursor.y; },
         startBox: null,
         endBox: null,
         boxColor: "Red",
         func: function () {
+          console.log(this.sx());
           ctx.save();
           if (this.selected) ctx.strokeStyle = "White";
           ctx.beginPath();
-          ctx.moveTo(this.sx, this.sy);
+          ctx.moveTo(this.sx(), this.sy());
           ctx.lineTo(this.lx(), this.ly());
           this.editing ? ctx.stroke() : ctx.stroke(this.path);
           if (this.selected) {
@@ -105,7 +106,7 @@ canv.onclick = (e) => {
             const boxSize = 10;
             this.startBox = new Path2D();
             this.endBox = new Path2D();
-            this.startBox.rect(this.sx - boxSize / 2, this.sy - boxSize / 2, boxSize, boxSize);
+            this.startBox.rect(this.sx() - boxSize / 2, this.sy() - boxSize / 2, boxSize, boxSize);
             this.endBox.rect(this.lx() - boxSize / 2, this.ly() - boxSize / 2, boxSize, boxSize);
 
             if (ctx.isPointInPath(this.startBox, cursor.x, cursor.y)) {
@@ -132,7 +133,7 @@ canv.onclick = (e) => {
       const s = funcQ[funcQ.length - 1];
       s.lx = () => lx;
       s.ly = () => ly;
-      s.path.moveTo(s.sx, s.sy);
+      s.path.moveTo(s.sx(), s.sy());
       s.path.lineTo(s.lx(), s.ly());
       s.editing = false;
       clickCounter = 0;
