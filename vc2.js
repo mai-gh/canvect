@@ -91,6 +91,7 @@ canv.onclick = (e) => {
         ly: function () { return cursor.y; },
         startBox: null,
         endBox: null,
+        boxColor: "Red",
         func: function () {
           ctx.save();
           if (this.selected) ctx.strokeStyle = "White";
@@ -99,15 +100,28 @@ canv.onclick = (e) => {
           ctx.lineTo(this.lx(), this.ly());
           this.editing ? ctx.stroke() : ctx.stroke(this.path);
           if (this.selected) {
-            ctx.strokeStyle = "Red";
+            ctx.strokeStyle = this.boxColor;
             ctx.lineWidth = 1; 
             const boxSize = 10;
             this.startBox = new Path2D();
             this.endBox = new Path2D();
             this.startBox.rect(this.sx - boxSize / 2, this.sy - boxSize / 2, boxSize, boxSize);
             this.endBox.rect(this.lx() - boxSize / 2, this.ly() - boxSize / 2, boxSize, boxSize);
-            ctx.stroke(this.startBox);
-            ctx.stroke(this.endBox);
+
+            if (ctx.isPointInPath(this.startBox, cursor.x, cursor.y)) {
+              ctx.stroke(this.endBox);
+              ctx.strokeStyle = 'Yellow';
+              ctx.stroke(this.startBox);
+            } else if (ctx.isPointInPath(this.endBox, cursor.x, cursor.y)) {
+              ctx.stroke(this.startBox);
+              ctx.strokeStyle = 'Yellow';
+              ctx.stroke(this.endBox);
+            } else {
+              ctx.stroke(this.startBox);
+              ctx.stroke(this.endBox);
+            }
+            //ctx.fill(this.startBox);
+            //ctx.fill(this.endBox);
           }
           ctx.restore();
         },
@@ -137,15 +151,28 @@ canv.onclick = (e) => {
       }
     } else if (clickCounter === 2) {
       if (getAllSelected().length === 1) {
+        const [ps] = getAllSelected();
         const uc = getStrokeUnderCursor();
-        if ((typeof uc === 'object') && ('selected' in uc) && (uc.selected)) {
-          // we are interacting with already selected item
-          console.log(typeof getStrokeUnderCursor());
-          if (ctx.isPointInPath(uc.endBox, cursor.x, cursor.y)) {
-            uc.editing = true;
-            uc.lx = function () { return cursor.x; };
-            uc.ly = function () { return cursor.y; }
-          }
+        console.log((ps === uc));
+        //console.log(getStrokeUnderCursor())
+//        if ((typeof uc === 'object') && ('selected' in uc) && (uc.selected)) {
+        if (ps === uc) { // we are interacting with already selected item, but not the points ( maybe )
+//          console.log(typeof getStrokeUnderCursor());
+//          if (ctx.isPointInPath(uc.endBox, cursor.x, cursor.y)) {
+//            uc.editing = true;
+//            uc.lx = function () { return cursor.x; };
+//            uc.ly = function () { return cursor.y; }
+//          } 
+        } else if (ctx.isPointInPath(ps.startBox, cursor.x, cursor.y)) {
+            ps.editing = true;
+            ps.sx = function () { return cursor.x; };
+            ps.sy = function () { return cursor.y; };
+        } else if (ctx.isPointInPath(ps.endBox, cursor.x, cursor.y)) {
+            ps.editing = true;
+            ps.lx = function () { return cursor.x; };
+            ps.ly = function () { return cursor.y; };
+          
+          
         } else {
           deselectAll();
           clickCounter = 0;
