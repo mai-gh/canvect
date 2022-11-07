@@ -84,7 +84,7 @@ canv.onclick = (e) => {
         path: new Path2D(),
         time: timeStamp,
         selected: false,
-        editing: true,
+        editing: 'endBox',
         sx: ((xx) => () => xx)(cursor.x),
         sy: ((yy) => () => yy)(cursor.y),
         lx: function () { return cursor.x; },
@@ -93,13 +93,17 @@ canv.onclick = (e) => {
         endBox: null,
         boxColor: "Red",
         func: function () {
-          console.log(this.sx());
           ctx.save();
           if (this.selected) ctx.strokeStyle = "White";
           ctx.beginPath();
           ctx.moveTo(this.sx(), this.sy());
           ctx.lineTo(this.lx(), this.ly());
-          this.editing ? ctx.stroke() : ctx.stroke(this.path);
+          //this.editing ? ctx.stroke() : ctx.stroke(this.path);
+          if (this.editing !== null) {
+            ctx.stroke()
+          } else { 
+            ctx.stroke(this.path);
+          }
           if (this.selected) {
             ctx.strokeStyle = this.boxColor;
             ctx.lineWidth = 1; 
@@ -135,7 +139,7 @@ canv.onclick = (e) => {
       s.ly = () => ly;
       s.path.moveTo(s.sx(), s.sy());
       s.path.lineTo(s.lx(), s.ly());
-      s.editing = false;
+      s.editing = null;
       clickCounter = 0;
     }
   } else if (strokeSelectList.value === "selection") {
@@ -154,7 +158,6 @@ canv.onclick = (e) => {
       if (getAllSelected().length === 1) {
         const [ps] = getAllSelected();
         const uc = getStrokeUnderCursor();
-        console.log((ps === uc));
         //console.log(getStrokeUnderCursor())
 //        if ((typeof uc === 'object') && ('selected' in uc) && (uc.selected)) {
         if (ps === uc) { // we are interacting with already selected item, but not the points ( maybe )
@@ -165,11 +168,11 @@ canv.onclick = (e) => {
 //            uc.ly = function () { return cursor.y; }
 //          } 
         } else if (ctx.isPointInPath(ps.startBox, cursor.x, cursor.y)) {
-            ps.editing = true;
+            ps.editing = 'startBox';
             ps.sx = function () { return cursor.x; };
             ps.sy = function () { return cursor.y; };
         } else if (ctx.isPointInPath(ps.endBox, cursor.x, cursor.y)) {
-            ps.editing = true;
+            ps.editing = 'endBox';
             ps.lx = function () { return cursor.x; };
             ps.ly = function () { return cursor.y; };
           
@@ -180,17 +183,30 @@ canv.onclick = (e) => {
         }
       }
     } else if (clickCounter === 3) {
-      const lx = cursor.x;
-      const ly = cursor.y;
       const [s] = getAllSelected();
-      s.lx = () => lx;
-      s.ly = () => ly;
-      s.path = new Path2D();
-      s.path.moveTo(s.sx, s.sy);
-      s.path.lineTo(s.lx(), s.ly());
-      s.editing = false;
-      clickCounter = 0;
-      deselectAll();
+      if (s.editing === 'endBox') {
+        const lx = cursor.x;
+        const ly = cursor.y;
+        s.lx = () => lx;
+        s.ly = () => ly;
+        s.path = new Path2D();
+        s.path.moveTo(s.sx(), s.sy());
+        s.path.lineTo(s.lx(), s.ly());
+        s.editing = false;
+        clickCounter = 0;
+        deselectAll();
+      } else if (s.editing === 'startBox') {
+        const sx = cursor.x;
+        const sy = cursor.y;
+        s.sx = () => sx;
+        s.sy = () => sy;
+        s.path = new Path2D();
+        s.path.moveTo(s.sx(), s.sy());
+        s.path.lineTo(s.lx(), s.ly());
+        s.editing = false;
+        clickCounter = 0;
+        deselectAll();
+      }
     }
   }
 };
