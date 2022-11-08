@@ -107,7 +107,7 @@ canv.onclick = (e) => {
           if (this.selected) {
             ctx.strokeStyle = this.boxColor;
             ctx.lineWidth = 1; 
-            const boxSize = 10;
+            const boxSize = 30;
             this.startBox = new Path2D();
             this.endBox = new Path2D();
             this.startBox.rect(this.sx() - boxSize / 2, this.sy() - boxSize / 2, boxSize, boxSize);
@@ -160,14 +160,7 @@ canv.onclick = (e) => {
         const uc = getStrokeUnderCursor();
         //console.log(getStrokeUnderCursor())
 //        if ((typeof uc === 'object') && ('selected' in uc) && (uc.selected)) {
-        if (ps === uc) { // we are interacting with already selected item, but not the points ( maybe )
-//          console.log(typeof getStrokeUnderCursor());
-//          if (ctx.isPointInPath(uc.endBox, cursor.x, cursor.y)) {
-//            uc.editing = true;
-//            uc.lx = function () { return cursor.x; };
-//            uc.ly = function () { return cursor.y; }
-//          } 
-        } else if (ctx.isPointInPath(ps.startBox, cursor.x, cursor.y)) {
+        if (ctx.isPointInPath(ps.startBox, cursor.x, cursor.y)) {
             ps.editing = 'startBox';
             ps.sx = function () { return cursor.x; };
             ps.sy = function () { return cursor.y; };
@@ -175,6 +168,29 @@ canv.onclick = (e) => {
             ps.editing = 'endBox';
             ps.lx = function () { return cursor.x; };
             ps.ly = function () { return cursor.y; };
+        } else if (ps === uc) { // we are interacting with already selected item, but not the points ( maybe )
+            ps.editing = 'moveAll';
+//            const preSX = ps.sx;
+//            const preSY = ps.sy;
+//            const preLX = ps.lx;
+//            const preLY = ps.ly;
+//            let SXDIFF = 0;
+//            const SYDIFF = 0;
+//            const LXDIFF = 0;
+//            const LYDIFF = 0;
+            // rename the vars!!!
+//            SXDIFF = cursor.x - preSX;
+
+            const xdiff = ps.sx() - ps.lx();
+            const ydiff = ps.sy() - ps.ly();
+            ps.sx = function () { return cursor.x + (xdiff / 2); };
+            ps.sy = function () { return cursor.y + (ydiff / 2); };
+            ps.lx = function () { return cursor.x - (xdiff / 2); };
+            ps.ly = function () { return cursor.y - (ydiff / 2); };
+            //ps.sx = function () { return cursor.x; };
+//            ps.sy = function () { return cursor.y; };
+//            ps.lx = function () { return cursor.x; };
+//            ps.ly = function () { return cursor.y; };
           
           
         } else {
@@ -192,7 +208,7 @@ canv.onclick = (e) => {
         s.path = new Path2D();
         s.path.moveTo(s.sx(), s.sy());
         s.path.lineTo(s.lx(), s.ly());
-        s.editing = false;
+        s.editing = null;
         clickCounter = 0;
         deselectAll();
       } else if (s.editing === 'startBox') {
@@ -203,7 +219,24 @@ canv.onclick = (e) => {
         s.path = new Path2D();
         s.path.moveTo(s.sx(), s.sy());
         s.path.lineTo(s.lx(), s.ly());
-        s.editing = false;
+        s.editing = null;
+        clickCounter = 0;
+        deselectAll();
+      } else if (s.editing === 'moveAll') {
+        const xdiff = s.sx() - s.lx();
+        const ydiff = s.sy() - s.ly();
+        const sx = cursor.x + (xdiff / 2);
+        const sy = cursor.y + (ydiff / 2);
+        const lx = cursor.x - (xdiff / 2);
+        const ly = cursor.y - (ydiff / 2);
+        s.sx = () => sx;
+        s.sy = () => sy;
+        s.lx = () => lx;
+        s.ly = () => ly;
+        s.path = new Path2D();
+        s.path.moveTo(s.sx(), s.sy());
+        s.path.lineTo(s.lx(), s.ly());
+        s.editing = null;
         clickCounter = 0;
         deselectAll();
       }
@@ -224,7 +257,7 @@ const displayStatus = () => {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.font = "16px Monospace";
   ctx.fillStyle = "yellow";
-  ctx.fillText(statusString, canv.width * 0.81, canv.height * 0.99);
+  ctx.fillText(statusString, canv.width * 0.81, canv.height * .025);
   ctx.restore();
 };
 
