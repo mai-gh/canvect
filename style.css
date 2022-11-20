@@ -1,0 +1,10 @@
+body > * {
+  border: 1px solid darkkhaki;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  color: #fff;
+  background-color: #111;
+}
