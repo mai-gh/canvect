@@ -8,3 +8,16 @@ body {
   color: #fff;
   background-color: #111;
 }
+
+#controlPanelDiv {
+  position: absolute;
+  margin: 2px;
+  inset: 0;
+  width: 9%;
+}
+
+#canv {
+  position: absolute;
+  margin: 2px;
+  left: calc(9% + 2px);
+}
