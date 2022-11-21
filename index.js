@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // DOM initialization
   const cPD = document.createElement("div");
   cPD.id = "controlPanelDiv";
-  const strokes = ["lineTo", "selection", "quadraticCurveTo"];
+  const strokes = ["Select", "Line", "Pen"];
 //  const strokeSelectList = document.createElement("select");
 //  strokeSelectList.id = "strokeSelectList";
 //  cPD.appendChild(strokeSelectList);

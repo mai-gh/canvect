@@ -8,7 +8,7 @@ const getAllSelected = (co) => {
 
 export default (co) => (e) => {
   co.clickCounter++;
-  if (co.selectedTool === "lineTo") {
+  if (co.selectedTool === "Line") {
     if (co.clickCounter === 1) {
       co.funcQ.push({
         path: new Path2D(),
@@ -70,7 +70,7 @@ export default (co) => (e) => {
       s.editing = null;
       co.clickCounter = 0;
     }
-  } else if (co.selectedTool === "selection") {
+  } else if (co.selectedTool === "Select") {
     if (co.clickCounter === 1) {
       deselectAll(co);
       for (const s of co.funcQ) {
