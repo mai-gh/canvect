@@ -31,7 +31,7 @@ body {
 }
 
 .toolButton:hover {
-  color: lightgrey;
+  color: darkgrey;
 }
 
 .toolButtonSelected {
@@ -40,7 +40,7 @@ body {
 
 
 .toolButtonSelected:hover {
-  color: royalblue;
+  color: dodgerblue;
 }
 
 button:focus {outline:0;}
