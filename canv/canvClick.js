@@ -8,7 +8,7 @@ const getAllSelected = (co) => {
 
 export default (co) => (e) => {
   co.clickCounter++;
-  if (strokeSelectList.value === "lineTo") {
+  if (co.selectedTool === "lineTo") {
     if (co.clickCounter === 1) {
       co.funcQ.push({
         path: new Path2D(),
@@ -24,7 +24,7 @@ export default (co) => (e) => {
         boxColor: "Red",
         func: function () {
           co.ctx.save();
-          co.ctx.lineWidth = 5;
+          //co.ctx.lineWidth = 5;
           co.ctx.strokeStyle = "blue"
           if (this.selected) co.ctx.strokeStyle = "White";
           co.ctx.beginPath();
@@ -70,7 +70,7 @@ export default (co) => (e) => {
       s.editing = null;
       co.clickCounter = 0;
     }
-  } else if (strokeSelectList.value === "selection") {
+  } else if (co.selectedTool === "selection") {
     if (co.clickCounter === 1) {
       deselectAll(co);
       for (const s of co.funcQ) {

@@ -3,6 +3,7 @@ import { default as canvClick, deselectAll } from './canvClick.js'
 const co = {
   canv: document.createElement("canvas"),
   funcQ: [],
+  selectedTool: null,
   clickCounter: 0,
   timeStamp: 0,
   oldTimeStamp: 0,
