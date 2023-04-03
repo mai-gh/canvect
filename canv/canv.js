@@ -13,7 +13,7 @@ const co = {
   cursorY: innerHeight / 2,
 };
 
-addEventListener("mousemove", (e) => {
+document.addEventListener("mousemove", (e) => {
   co.cursorX = Math.floor(e.clientX - co.canv.getBoundingClientRect().left);
   co.cursorY = Math.floor(e.clientY - co.canv.getBoundingClientRect().top);
 });
@@ -21,6 +21,11 @@ addEventListener("mousemove", (e) => {
 co.canv.id = "canv";
 co.canv.onclick = canvClick(co);
 co.ctx = co.canv.getContext("2d");
+
+co.resizeCanv = () => {
+  co.canv.width = window.innerWidth * .895;
+  co.canv.height = window.innerHeight * .98;
+}
 
 co.draw = (ts) => {
   co.timeStamp = ts;

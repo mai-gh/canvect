@@ -1,42 +1,35 @@
 import { default as co } from './canv/canv.js'
 import { deselectAll } from './canv/canvClick.js'
 
+// cPD stand for control panel div
+// co stands for context
+
 document.addEventListener("DOMContentLoaded", function() {
 
   // DOM initialization
   const cPD = document.createElement("div");
   cPD.id = "controlPanelDiv";
   const strokes = ["Select", "Line", "Pen"];
-//  const strokeSelectList = document.createElement("select");
-//  strokeSelectList.id = "strokeSelectList";
-//  cPD.appendChild(strokeSelectList);
-//  strokes.forEach((element, key) => {strokeSelectList[key] = new Option(element, element)});
   strokes.forEach( val => {
     const b = document.createElement("button");
+    b.id = `${val}-Button`
     b.classList.add('toolButton');
     b.innerHTML = val;
     b.onclick = (e) => {
-      //document.querySelectorAll('button').forEach(e => e.style.color = 'black');
-      document.querySelectorAll('button').forEach(e => e.classList.remove('toolButtonSelected'));
-//      console.log(e)
-//      e.target.style.color = 'blue';
+      document.querySelectorAll('.toolButton').forEach(e => e.classList.remove('toolButtonSelected'));
       e.target.classList.add('toolButtonSelected')
       deselectAll(co);
       co.clickCounter = 0;
       co.selectedTool = val;
-    ;}
+    }
     cPD.appendChild(b);
   });
   document.body.appendChild(cPD);
 
-  co.canv.width = window.innerWidth - (window.innerWidth * .09) - 8;
-  co.canv.height = window.innerHeight - 6; 
-  document.body.appendChild(co.canv);
+  window.onresize = co.resizeCanv;
+  co.resizeCanv();
 
-//  strokeSelectList.onchange = () => {
-//    deselectAll(co);
-//    co.clickCounter = 0;
-//  };
+  document.body.appendChild(co.canv);
 
   window.requestAnimationFrame(co.draw);
 });
