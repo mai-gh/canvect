@@ -1,4 +1,4 @@
-import { default as canvClick, deselectAll } from './canvClick.js'
+import { default as canvClick, deselectAll, getStrokeUnderCursor, unhoverAll } from './canvClick.js'
 
 const co = {
   canv: document.createElement("canvas"),
@@ -14,8 +14,8 @@ const co = {
 };
 
 document.addEventListener("mousemove", (e) => {
-  co.cursorX = Math.floor(e.clientX - co.canv.getBoundingClientRect().left);
-  co.cursorY = Math.floor(e.clientY - co.canv.getBoundingClientRect().top);
+  co.cursorX = (Math.floor(e.clientX - co.canv.getBoundingClientRect().left)-1);
+  co.cursorY = (Math.floor(e.clientY - co.canv.getBoundingClientRect().top)-1);
 });
 
 co.canv.id = "canv";
@@ -30,6 +30,13 @@ co.resizeCanv = () => {
 co.draw = (ts) => {
   co.timeStamp = ts;
   co.ctx.clearRect(0, 0, co.canv.width, co.canv.height);
+
+  unhoverAll(co);
+  if ( (co.selectedTool === "Select") && (co.clickCounter === 0)) {
+    const uc = getStrokeUnderCursor(co);
+    if (uc !== undefined) uc.hovered = true;
+  }
+
   for (const f of co.funcQ) f.func();
   window.requestAnimationFrame(co.draw);
 };

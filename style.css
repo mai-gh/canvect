@@ -50,7 +50,7 @@ button:focus {outline:0;}
 #canv {
   position: absolute;
   left: calc(9.5%);
-  cursor: cell;
+  cursor: crosshair;
   border: 1px solid darkkhaki;
   margin: .3em;
 /*  height: 98%; */

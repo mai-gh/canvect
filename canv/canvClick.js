@@ -1,5 +1,6 @@
-const getStrokeUnderCursor = (co) => { for (const s of co.funcQ) if (co.ctx.isPointInStroke(s.path, co.cursorX, co.cursorY)) return s };
+export const getStrokeUnderCursor = (co) => { for (const s of co.funcQ) if (co.ctx.isPointInStroke(s.path, co.cursorX, co.cursorY)) return s };
 export const deselectAll = (co) => { for (const s of co.funcQ) s.selected = false };
+export const unhoverAll = (co) => { for (const s of co.funcQ) s.hovered = false };
 const getAllSelected = (co) => {
   const selArr = [];
   for (const s of co.funcQ) if (s.selected) selArr.push(s);
@@ -14,6 +15,7 @@ export default (co) => (e) => {
         path: new Path2D(),
         //time: timeStamp,
         selected: false,
+        hovered: false,
         editing: "endBox",
         sx: ( (xx) => () => xx)(co.cursorX),
         sy: ( (yy) => () => yy)(co.cursorY),
@@ -24,9 +26,10 @@ export default (co) => (e) => {
         boxColor: "Red",
         func: function () {
           co.ctx.save();
-          //co.ctx.lineWidth = 5;
+          co.ctx.lineWidth = 1;
           co.ctx.strokeStyle = "blue"
           if (this.selected) co.ctx.strokeStyle = "White";
+          if (this.hovered) co.ctx.strokeStyle = "CornFlowerBlue";
           co.ctx.beginPath();
           co.ctx.moveTo(this.sx(), this.sy());
           co.ctx.lineTo(this.lx(), this.ly());
@@ -38,7 +41,7 @@ export default (co) => (e) => {
           if (this.selected) {
             co.ctx.strokeStyle = this.boxColor;
             co.ctx.lineWidth = 1;
-            const boxSize = 30;
+            const boxSize = 16;
             this.startBox = new Path2D();
             this.endBox = new Path2D();
             this.startBox.rect(this.sx() - boxSize / 2, this.sy() - boxSize / 2, boxSize, boxSize);
