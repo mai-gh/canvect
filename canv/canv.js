@@ -27,12 +27,14 @@ co.resizeCanv = () => {
   co.canv.height = window.innerHeight * .98;
 }
 
+window.onresize = co.resizeCanv;
+
 co.draw = (ts) => {
   co.timeStamp = ts;
   co.ctx.clearRect(0, 0, co.canv.width, co.canv.height);
 
   unhoverAll(co);
-  if ( (co.selectedTool === "Select") && (co.clickCounter === 0)) {
+  if ( (co.selectedTool === "Select") && (co.clickCounter === 0 || co.clickCounter === 1) ) {
     const uc = getStrokeUnderCursor(co);
     if (uc !== undefined) uc.hovered = true;
   }
