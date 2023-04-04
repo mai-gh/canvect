@@ -33,6 +33,7 @@ const handleSelect = (co) => {
         handleLineSelect[co.clickCounter.toString()](co);
         break;
       case 'circle':
+        handleCircleSelect[co.clickCounter.toString()](co);
         break;
       default:
         console.log('zzzzzzzz')
