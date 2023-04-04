@@ -1,8 +1,11 @@
+import { deselectAll, getAllSelected } from './select.js'
+
 // https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Basic_Shapes
 
 const handleLine = (co) => {
   if (co.clickCounter === 1) {
     co.funcQ.push({
+      type: "line",
       path: new Path2D(),
       //time: timeStamp,
       selected: false,
@@ -63,6 +66,75 @@ const handleLine = (co) => {
     s.editing = null;
     co.clickCounter = 0;
   }
+}
+
+export const handleLineSelect = {
+  '2': (co) => {
+    const [ps] = getAllSelected(co);
+    if (co.ctx.isPointInPath(ps.startBox, co.cursorX, co.cursorY)) {
+      ps.editing = "startBox";
+      ps.sx = () => co.cursorX;
+      ps.sy = () => co.cursorY;
+    } else if (co.ctx.isPointInPath(ps.endBox, co.cursorX, co.cursorY)) {
+      ps.editing = "endBox";
+      ps.lx = () => co.cursorX;
+      ps.ly = () => co.cursorY;
+    } else if (co.ctx.isPointInStroke(ps.path, co.cursorX, co.cursorY)) {
+      ps.editing = "moveAll";
+      const xdiff = ps.sx() - ps.lx();
+      const ydiff = ps.sy() - ps.ly();
+      ps.sx = () => co.cursorX + xdiff / 2;
+      ps.sy = () => co.cursorY + ydiff / 2;
+      ps.lx = () => co.cursorX - xdiff / 2;
+      ps.ly = () => co.cursorY - ydiff / 2;
+    } else {
+      deselectAll(co);
+      co.clickCounter = 0;
+    }
+  },
+  '3': (co) => {
+    const [s] = getAllSelected(co);
+    if (s.editing === "endBox") {
+      const lx = co.cursorX;
+      const ly = co.cursorY;
+      s.lx = () => lx;
+      s.ly = () => ly;
+      s.path = new Path2D();
+      s.path.moveTo(s.sx(), s.sy());
+      s.path.lineTo(s.lx(), s.ly());
+      s.editing = null;
+      co.clickCounter = 0;
+      deselectAll(co);
+    } else if (s.editing === "startBox") {
+      const sx = co.cursorX;
+      const sy = co.cursorY;
+      s.sx = () => sx;
+      s.sy = () => sy;
+      s.path = new Path2D();
+      s.path.moveTo(s.sx(), s.sy());
+      s.path.lineTo(s.lx(), s.ly());
+      s.editing = null;
+      co.clickCounter = 0;
+      deselectAll(co);
+    } else if (s.editing === "moveAll") {
+      const xdiff = s.sx() - s.lx();
+      const ydiff = s.sy() - s.ly();
+      const sx = co.cursorX + xdiff / 2;
+      const sy = co.cursorY + ydiff / 2;
+      const lx = co.cursorX - xdiff / 2;
+      const ly = co.cursorY - ydiff / 2;
+      s.sx = () => sx;
+      s.sy = () => sy;
+      s.lx = () => lx;
+      s.ly = () => ly;
+      s.path = new Path2D();
+      s.path.moveTo(s.sx(), s.sy());
+      s.path.lineTo(s.lx(), s.ly());
+      s.editing = null;
+      co.clickCounter = 0;
+      deselectAll(co);
+    }
+  },
 }
 
 export default handleLine;
