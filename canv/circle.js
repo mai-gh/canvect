@@ -23,20 +23,9 @@ const handleCircle = (co) => {
         if (this.selected) co.ctx.strokeStyle = "White";
         if (this.hovered) co.ctx.strokeStyle = "CornFlowerBlue";
         co.ctx.beginPath();
-        //co.ctx.moveTo(this.sx(), this.sy());
-        //co.ctx.lineTo(this.lx(), this.ly());
-        //this.radius = () => {
-          const xr = Math.abs(this.lx() - this.sx());
-          const yr = Math.abs(this.ly() - this.sy());
-          //console.log("xr:", xr, "yr:", yr)
-          if (xr > yr) {
-            this.radius = xr;
-            //return xr;
-          } else {
-            this.radius = yr;
-            //return yr;
-          }
-        //}
+        const xr = Math.abs(this.lx() - this.sx());
+        const yr = Math.abs(this.ly() - this.sy());
+        this.radius = Math.sqrt((xr**2)+(yr**2));
         co.ctx.arc(this.sx(), this.sy(), this.radius, 0, Math.PI * 2, true);
         if (this.editing !== null) {
           co.ctx.stroke();
