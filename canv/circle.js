@@ -42,17 +42,21 @@ const handleCircle = (co) => {
           this.centerBox = new Path2D();
           this.perimeterBox = new Path2D();
           this.centerBox.rect(this.sx() - boxSize / 2, this.sy() - boxSize / 2,     boxSize, boxSize);
-          //this.perimeterBox.rect(this.lx() - boxSize / 2, this.ly() - boxSize / 2,       boxSize, boxSize);
+          if (co.ctx.isPointInStroke(this.path, co.cursorX, co.cursorY)) {
+            //this.perimeterBox.rect(this.lx() - boxSize / 2, this.ly() - boxSize / 2, boxSize, boxSize);
+            this.perimeterBox.rect(co.cursorX - boxSize / 2, co.cursorY - boxSize / 2, boxSize, boxSize);
+          }
           if (co.ctx.isPointInPath(this.centerBox, co.cursorX, co.cursorY)) {
           //  co.ctx.stroke(this.endBox);
             co.ctx.strokeStyle = "Yellow";
             co.ctx.stroke(this.centerBox);
-          //} else if (co.ctx.isPointInPath(this.endBox, co.cursorX, co.cursorY)) {                co.ctx.stroke(this.startBox);
-          //  co.ctx.strokeStyle = "Yellow";
-          //  co.ctx.stroke(this.endBox);
+          } else if (co.ctx.isPointInPath(this.perimeterBox, co.cursorX, co.cursorY)) {  
+          co.ctx.stroke(this.centerBox);
+            co.ctx.strokeStyle = "Yellow";
+            co.ctx.stroke(this.perimeterBox);
           } else {
             co.ctx.stroke(this.centerBox);
-            //co.ctx.stroke(this.perimeterBox);
+            co.ctx.stroke(this.perimeterBox);
           }
         }
         co.ctx.restore();
@@ -92,10 +96,10 @@ export const handleCircleSelect = {
       console.log(ps)
       
       console.log("sx:", ps.sx(), "sy:", ps.sy(), "rad:", ps.radius)
-    //} else if (co.ctx.isPointInPath(ps.endBox, co.cursorX, co.cursorY)) {
-    //  ps.editing = "endBox";
-    //  ps.lx = () => co.cursorX;
-    //  ps.ly = () => co.cursorY;
+    } else if (co.ctx.isPointInPath(ps.perimeterBox, co.cursorX, co.cursorY)) {
+      ps.editing = "perimeterBox";
+      ps.lx = () => co.cursorX;
+      ps.ly = () => co.cursorY;
     //} else if (co.ctx.isPointInStroke(ps.path, co.cursorX, co.cursorY)) {
     //  ps.editing = "moveAll";
     //  const xdiff = ps.sx() - ps.lx();
@@ -128,7 +132,16 @@ export const handleCircleSelect = {
       deselectAll(co);
       console.log(s)
       console.log("sx:", s.sx(), "sy:", s.sy(), "rad:", s.radius)
-//    } else if (s.editing === "startBox") {
+    } else if (s.editing === "perimeterBox") {
+      const lx = co.cursorX;
+      const ly = co.cursorY;
+      s.lx = () => lx;
+      s.ly = () => ly;
+      s.path = new Path2D();
+      s.path.arc(s.sx(), s.sy(), s.radius, 0, Math.PI * 2, true);
+      s.editing = null;
+      co.clickCounter = 0;
+      deselectAll(co);
 //      const sx = co.cursorX;
 //      const sy = co.cursorY;
 //      s.sx = () => sx;
