@@ -1,4 +1,5 @@
-import { default as canvClick, deselectAll, getStrokeUnderCursor, unhoverAll } from './canvClick.js'
+import handleClick from './canvClick.js'
+import { deselectAll, getStrokeUnderCursor, unhoverAll } from './select.js'
 
 const co = {
   canv: document.createElement("canvas"),
@@ -19,7 +20,7 @@ document.addEventListener("mousemove", (e) => {
 });
 
 co.canv.id = "canv";
-co.canv.onclick = canvClick(co);
+co.canv.onclick = handleClick(co);
 co.ctx = co.canv.getContext("2d");
 
 co.resizeCanv = () => {

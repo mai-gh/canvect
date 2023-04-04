@@ -1,6 +1,6 @@
-import { deselectAll } from './canvClick.js'
+import { deselectAll } from './select.js'
 
-const strokes = ["Select", "Line", "Pen"];
+const strokes = ["Select", "Line", "Circle"];
 
 const genCPD = (co) => {
   const cPD = document.createElement("div");
