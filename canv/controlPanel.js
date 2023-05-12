@@ -2,19 +2,31 @@ import { deselectAll } from './select.js'
 
 const strokes = ["Scroll", "Select", "Line", "Circle", 'Rectangle', 'Multi-Line', 'Arc', 'Elipse', 'Quadratic Bézier', 'Cubic Bézier', 'Text'];
 
-const options = ['Show Grid', 'Snap to Grid', 'Snap to Edges', 'Import SVG', 'Export SVG', 'CLI']
+const options = {
+  'Show Grid': (co) => (e) => {
+    if (co.showGrid === false) {
+      co.showGrid = true;
+      e.target.classList.add('toolButtonSelected')
+    } else {
+      co.showGrid = false;
+      e.target.classList.remove('toolButtonSelected')
+    }
+  },
+  'Snap to Grid': (co) => (e) => {},
+  'Snap to Edges': (co) => (e) => {},
+  'Import SVG': (co) => (e) => {},
+  'Export SVG': (co) => (e) => {},
+  'CLI': (co) => (e) => {}
+}
 
 const genCPD = (co) => {
   const cPD = document.createElement("div");
   const toolPanel = document.createElement("div");
   const optionsPanel = document.createElement("div");
-  //const debugPanel = document.createElement("div");
-
  
   cPD.id = "controlPanelDiv";
   toolPanel.id = "toolPanelDiv";
   optionsPanel.id = "optionsPanelDiv";
-  //debugPanel.id = "debugPanelDiv";
 
   strokes.forEach( val => {
     const b = document.createElement("button");
@@ -22,31 +34,26 @@ const genCPD = (co) => {
     b.classList.add('toolButton');
     b.innerHTML = val;
     b.onclick = (e) => {
-      document.querySelectorAll('.toolButton').forEach(e => e.classList.remove('toolButtonSelected'));
+      document.querySelectorAll('#toolPanelDiv > .toolButton').forEach(e => e.classList.remove('toolButtonSelected'));
       e.target.classList.add('toolButtonSelected')
       deselectAll(co);
       co.clickCounter = 0;
       co.selectedTool = val;
     }
-    //cPD.appendChild(b);
     toolPanel.appendChild(b);
   });
 
-  options.forEach( val => {
+  for (const [key, val] of Object.entries(options)) {
     const b = document.createElement("button");
-    b.id = `${val}-Button`
+    b.id = `${key}-Button`;
     b.classList.add('toolButton');
-    b.innerHTML = val;
+    b.innerHTML = key;
+    b.onclick = val(co);
     optionsPanel.appendChild(b);
-  });
-
-
-  //optionsPanel.appendChild(document.createTextNode("OPTIONS"));
-  //debugPanel.appendChild(document.createTextNode("DEBUG"));
+  }
 
   cPD.appendChild(toolPanel);
   cPD.appendChild(optionsPanel);
-  //cPD.appendChild(debugPanel);
 
   return cPD
 }
