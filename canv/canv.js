@@ -14,6 +14,9 @@ const co = {
   cursorY: innerHeight / 2,
   showGrid: false,
   gridSize: 10,
+  scale: 1,
+  translatePos: { x: 0, y: 0 },
+
 };
 
 document.addEventListener("mousemove", (e) => {
@@ -32,6 +35,21 @@ co.resizeCanv = () => {
 
 window.onresize = co.resizeCanv;
 
+co.canv.onwheel = (e) => {
+  if (e.wheelDelta > 0) {
+    co.translatePos.x += co.cursorX
+    co.translatePos.y += co.cursorY
+    co.scale += .1
+    //co.ctx.scale(2, 2)
+  } else {
+    co.translatePos.x -= co.cursorX
+    co.translatePos.y -= co.cursorY
+    co.scale -= .1
+    //co.ctx.scale(.5, .5)
+  }
+  console.log(e)
+}
+
 co.draw = (ts) => {
   co.timeStamp = ts;
   co.ctx.clearRect(0, 0, co.canv.width, co.canv.height);
@@ -42,12 +60,13 @@ co.draw = (ts) => {
     if (uc !== undefined) uc.hovered = true;
   }
 
+  co.ctx.scale(1, 1);
   if (co.showGrid) {
     co.ctx.save();
     co.ctx.lineWidth = 0;
     co.ctx.fillStyle = "grey";
-    for (let h=0; h<=co.canv.height; h=h+co.gridSize) {
-      for (let w=0; w<=co.canv.width; w=w+co.gridSize) {
+    for (let h=-0.5; h<=co.canv.height; h=h+co.gridSize) {
+      for (let w=-0.5; w<=co.canv.width; w=w+co.gridSize) {
         co.ctx.fillRect(w, h, 1, 1);
       }
     }
@@ -55,7 +74,10 @@ co.draw = (ts) => {
   }
 
 
-
+//  co.ctx.translate(co.translatePos.x, co.translatePos.y);
+  co.translatePos = { x: 0, y: 0 };
+  co.ctx.scale(co.scale, co.scale);
+  co.scale = 1
 
   for (const f of co.funcQ) f.func();
   window.requestAnimationFrame(co.draw);
