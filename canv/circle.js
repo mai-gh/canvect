@@ -42,13 +42,13 @@ const handleCircle = (co) => {
           this.centerBox = new Path2D();
           this.perimeterBox = new Path2D();
           this.centerBox.rect(this.sx() - boxSize / 2, this.sy() - boxSize / 2,     boxSize, boxSize);
-          if (co.ctx.isPointInStroke(this.path, co.cursorX, co.cursorY)) {
+          if (co.ctx.isPointInStroke(this.path, co.cursorX_base, co.cursorY_base)) {
             this.perimeterBox.rect(co.cursorX - boxSize / 2, co.cursorY - boxSize / 2, boxSize, boxSize);
           }
-          if (co.ctx.isPointInPath(this.centerBox, co.cursorX, co.cursorY)) {
+          if (co.ctx.isPointInPath(this.centerBox, co.cursorX_base, co.cursorY_base)) {
             co.ctx.strokeStyle = "Yellow";
             co.ctx.stroke(this.centerBox);
-          } else if (co.ctx.isPointInPath(this.perimeterBox, co.cursorX, co.cursorY)) {  
+          } else if (co.ctx.isPointInPath(this.perimeterBox, co.cursorX_base, co.cursorY_base)) {  
           co.ctx.stroke(this.centerBox);
             co.ctx.strokeStyle = "Yellow";
             co.ctx.stroke(this.perimeterBox);
@@ -77,11 +77,11 @@ const handleCircle = (co) => {
 export const handleCircleSelect = {
   '2': (co) => {
     const [ps] = getAllSelected(co);
-    if (co.ctx.isPointInPath(ps.centerBox, co.cursorX, co.cursorY)) {
+    if (co.ctx.isPointInPath(ps.centerBox, co.cursorX_base, co.cursorY_base)) {
       ps.editing = "centerBox";
       ps.sx = () => co.cursorX;
       ps.sy = () => co.cursorY;
-    } else if (co.ctx.isPointInPath(ps.perimeterBox, co.cursorX, co.cursorY)) {
+    } else if (co.ctx.isPointInPath(ps.perimeterBox, co.cursorX_base, co.cursorY_base)) {
       ps.editing = "perimeterBox";
       ps.lx = () => co.cursorX;
       ps.ly = () => co.cursorY;

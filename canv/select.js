@@ -1,7 +1,7 @@
 import {handleLineSelect} from './line.js';
 import {handleCircleSelect} from './circle.js';
 
-export const getStrokeUnderCursor = (co) => { for (const s of co.funcQ) if (co.ctx.isPointInStroke(s.path, co.cursorX, co.cursorY)) return s };
+export const getStrokeUnderCursor = (co) => { for (const s of co.funcQ) if (co.ctx.isPointInStroke(s.path, co.cursorX_base, co.cursorY_base)) return s };
 export const deselectAll = (co) => { for (const s of co.funcQ) s.selected = false };
 export const unhoverAll = (co) => { for (const s of co.funcQ) s.hovered = false };
 export const getAllSelected = (co) => {
@@ -14,7 +14,7 @@ const handleSelect = (co) => {
   if (co.clickCounter === 1) {
     deselectAll(co);
     for (const s of co.funcQ) {
-      if (co.ctx.isPointInStroke(s.path, co.cursorX, co.cursorY)) {
+      if (co.ctx.isPointInStroke(s.path, co.cursorX_base, co.cursorY_base)) {
         s.selected = true;
         break;
       }

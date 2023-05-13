@@ -40,11 +40,11 @@ const handleLine = (co) => {
           this.endBox = new Path2D();
           this.startBox.rect(this.sx() - boxSize / 2, this.sy() - boxSize / 2,     boxSize, boxSize);
           this.endBox.rect(this.lx() - boxSize / 2, this.ly() - boxSize / 2,       boxSize, boxSize);
-          if (co.ctx.isPointInPath(this.startBox, co.cursorX, co.cursorY)) {
+          if (co.ctx.isPointInPath(this.startBox, co.cursorX_base, co.cursorY_base)) {
             co.ctx.stroke(this.endBox);
             co.ctx.strokeStyle = "Yellow";
             co.ctx.stroke(this.startBox);
-          } else if (co.ctx.isPointInPath(this.endBox, co.cursorX, co.cursorY)) {                co.ctx.stroke(this.startBox);
+          } else if (co.ctx.isPointInPath(this.endBox, co.cursorX_base, co.cursorY_base)) {                co.ctx.stroke(this.startBox);
             co.ctx.strokeStyle = "Yellow";
             co.ctx.stroke(this.endBox);
           } else {
@@ -71,15 +71,15 @@ const handleLine = (co) => {
 export const handleLineSelect = {
   '2': (co) => {
     const [ps] = getAllSelected(co);
-    if (co.ctx.isPointInPath(ps.startBox, co.cursorX, co.cursorY)) {
+    if (co.ctx.isPointInPath(ps.startBox, co.cursorX_base, co.cursorY_base)) {
       ps.editing = "startBox";
       ps.sx = () => co.cursorX;
       ps.sy = () => co.cursorY;
-    } else if (co.ctx.isPointInPath(ps.endBox, co.cursorX, co.cursorY)) {
+    } else if (co.ctx.isPointInPath(ps.endBox, co.cursorX_base, co.cursorY_base)) {
       ps.editing = "endBox";
       ps.lx = () => co.cursorX;
       ps.ly = () => co.cursorY;
-    } else if (co.ctx.isPointInStroke(ps.path, co.cursorX, co.cursorY)) {
+    } else if (co.ctx.isPointInStroke(ps.path, co.cursorX_base, co.cursorY_base)) {
       ps.editing = "moveAll";
       const xdiff = ps.sx() - ps.lx();
       const ydiff = ps.sy() - ps.ly();
