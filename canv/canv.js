@@ -102,7 +102,7 @@ co.canv.onwheel = (e) => {
     //co.scale -= .1
     //co.ctx.scale(.5, .5)
   }
-  console.log(e)
+//  console.log(e)
 }
 
 co.draw = (ts) => {

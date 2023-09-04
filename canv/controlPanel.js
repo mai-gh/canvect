@@ -1,4 +1,5 @@
-import { deselectAll } from './select.js'
+import { deselectAll } from './select.js';
+import { expSVG } from './svg.js';
 
 const strokes = ["Scroll", "Select", "Line", "Circle", 'Rectangle', 'Multi-Line', 'Arc', 'Elipse', 'Quadratic Bézier', 'Cubic Bézier', 'Text'];
 
@@ -15,7 +16,7 @@ const options = {
   'Snap to Grid': (co) => (e) => {},
   'Snap to Edges': (co) => (e) => {},
   'Import SVG': (co) => (e) => {},
-  'Export SVG': (co) => (e) => {},
+  'Export SVG': (co) => (e) => {expSVG(co)},
   'CLI': (co) => (e) => {}
 }
 
