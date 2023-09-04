@@ -25,7 +25,7 @@ export const expSVG = (co) => {
       l.style.stroke = 'blue';
       l.style.fill = 'transparent';
       l.setAttribute('cx', p.sx());
-      l.setAttribute('cy', p.sx());
+      l.setAttribute('cy', p.sy());
       l.setAttribute('r', p.radius);
       svgElem.appendChild(l);
     }
@@ -98,4 +98,5 @@ export const impSVG = (input) => {
   })
 }
 
+window.expSVG = expSVG;
 window.impSVG = impSVG;
