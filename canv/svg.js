@@ -1,4 +1,5 @@
 import {lineTemplate} from './line.js'
+import {circleTemplate} from './circle.js'
 import {deselectAll} from './select.js'
 
 export const expSVG = (co) => {
@@ -19,14 +20,13 @@ export const expSVG = (co) => {
       l.setAttribute('y2', p.ly());
       svgElem.appendChild(l);
     } else if (p.type === "circle") {
-      const l = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+      const l = document.createElementNS('http://www.w3.org/2000/svg','circle');
       l.style['stroke-width'] = 1;
       l.style.stroke = 'blue';
       l.style.fill = 'transparent';
       l.setAttribute('cx', p.sx());
       l.setAttribute('cy', p.sx());
-      l.setAttribute('rx', p.radius);
-      l.setAttribute('ry', p.radius);
+      l.setAttribute('r', p.radius);
       svgElem.appendChild(l);
     }
   });
@@ -40,7 +40,7 @@ export const expSVG = (co) => {
       if (l.tagName === 'line') {
         l.setAttribute('x1', Number(l.getAttribute('x1')) + Math.abs(bb.x));
         l.setAttribute('x2', Number(l.getAttribute('x2')) + Math.abs(bb.x));
-      } else if (l.tagName === 'ellipse') {
+      } else if (l.tagName === 'circle') {
         l.setAttribute('cx', Number(l.getAttribute('cx')) + Math.abs(bb.x));
       }
     })
@@ -50,7 +50,7 @@ export const expSVG = (co) => {
       if (l.tagName === 'line') {
         l.setAttribute('y1', Number(l.getAttribute('y1')) + Math.abs(bb.y));
         l.setAttribute('y2', Number(l.getAttribute('y2')) + Math.abs(bb.y));
-      } else if (l.tagName === 'ellipse') {
+      } else if (l.tagName === 'circle') {
         l.setAttribute('cy', Number(l.getAttribute('cy')) + Math.abs(bb.y));
       }
     })
@@ -82,6 +82,17 @@ export const impSVG = (input) => {
       s.editing = null;
       co.clickCounter = 0;
       deselectAll(co);      
+      co.funcQ.push(s);
+    } else if (l.tagName === 'circle') {
+      const s = circleTemplate(co);
+      s.sx = () => Number(l.getAttribute('cx'));
+      s.sy = () => Number(l.getAttribute('cy'));
+      s.radius = Number(l.getAttribute('r'));
+      s.path = new Path2D();
+      s.path.arc(s.sx(), s.sy(), s.radius, 0, Math.PI * 2, true);
+      s.editing = null;
+      co.clickCounter = 0;
+      deselectAll(co);
       co.funcQ.push(s);
     }
   })
