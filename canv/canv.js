@@ -136,7 +136,12 @@ co.draw = (ts) => {
     co.ctx.fillStyle = "grey";
     for (let h=-0.5; h<=co.canv.height; h=h+co.gridSize) {
       for (let w=-0.5; w<=co.canv.width; w=w+co.gridSize) {
-        co.ctx.fillRect(w, h, 1, 1);
+        co.ctx.fillRect(
+          w + (co.baseOffset.x % co.gridSize),
+          h + (co.baseOffset.y % co.gridSize),
+          1,
+          1
+        );
       }
     }
     co.ctx.restore();
