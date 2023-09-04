@@ -11,10 +11,10 @@ export const lineTemplate = (co) => {
     selected: false,
     hovered: false,
     editing: "endBox",
-    sx: ( (xx) => () => xx)(co.cursorX),
-    sy: ( (yy) => () => yy)(co.cursorY),
-    lx: () => co.cursorX,
-    ly: () => co.cursorY,
+    sx: ( (xx) => () => xx)(co.modCursorX),
+    sy: ( (yy) => () => yy)(co.modCursorY),
+    lx: () => co.modCursorX,
+    ly: () => co.modCursorY,
     startBox: null,
     endBox: null,
     boxColor: "Red",
@@ -62,8 +62,8 @@ const handleLine = (co) => {
   if (co.clickCounter === 1) {
     co.funcQ.push(lineTemplate(co));
   } else if (co.clickCounter === 2) {
-    const lx = co.cursorX;
-    const ly = co.cursorY;
+    const lx = co.modCursorX;
+    const ly = co.modCursorY;
     const s = co.funcQ[co.funcQ.length - 1];
     s.lx = () => lx;
     s.ly = () => ly;
@@ -79,20 +79,20 @@ export const handleLineSelect = {
     const [ps] = getAllSelected(co);
     if (co.ctx.isPointInPath(ps.startBox, co.cursorX_base, co.cursorY_base)) {
       ps.editing = "startBox";
-      ps.sx = () => co.cursorX;
-      ps.sy = () => co.cursorY;
+      ps.sx = () => co.modCursorX;
+      ps.sy = () => co.modCursorY;
     } else if (co.ctx.isPointInPath(ps.endBox, co.cursorX_base, co.cursorY_base)) {
       ps.editing = "endBox";
-      ps.lx = () => co.cursorX;
-      ps.ly = () => co.cursorY;
+      ps.lx = () => co.modCursorX;
+      ps.ly = () => co.modCursorY;
     } else if (co.ctx.isPointInStroke(ps.path, co.cursorX_base, co.cursorY_base)) {
       ps.editing = "moveAll";
       const xdiff = ps.sx() - ps.lx();
       const ydiff = ps.sy() - ps.ly();
-      ps.sx = () => co.cursorX + xdiff / 2;
-      ps.sy = () => co.cursorY + ydiff / 2;
-      ps.lx = () => co.cursorX - xdiff / 2;
-      ps.ly = () => co.cursorY - ydiff / 2;
+      ps.sx = () => co.modCursorX + xdiff / 2;
+      ps.sy = () => co.modCursorY + ydiff / 2;
+      ps.lx = () => co.modCursorX - xdiff / 2;
+      ps.ly = () => co.modCursorY - ydiff / 2;
     } else {
       deselectAll(co);
       co.clickCounter = 0;
@@ -101,8 +101,8 @@ export const handleLineSelect = {
   '3': (co) => {
     const [s] = getAllSelected(co);
     if (s.editing === "endBox") {
-      const lx = co.cursorX;
-      const ly = co.cursorY;
+      const lx = co.modCursorX;
+      const ly = co.modCursorY;
       s.lx = () => lx;
       s.ly = () => ly;
       s.path = new Path2D();
@@ -112,8 +112,8 @@ export const handleLineSelect = {
       co.clickCounter = 0;
       deselectAll(co);
     } else if (s.editing === "startBox") {
-      const sx = co.cursorX;
-      const sy = co.cursorY;
+      const sx = co.modCursorX;
+      const sy = co.modCursorY;
       s.sx = () => sx;
       s.sy = () => sy;
       s.path = new Path2D();
@@ -125,10 +125,10 @@ export const handleLineSelect = {
     } else if (s.editing === "moveAll") {
       const xdiff = s.sx() - s.lx();
       const ydiff = s.sy() - s.ly();
-      const sx = co.cursorX + xdiff / 2;
-      const sy = co.cursorY + ydiff / 2;
-      const lx = co.cursorX - xdiff / 2;
-      const ly = co.cursorY - ydiff / 2;
+      const sx = co.modCursorX + xdiff / 2;
+      const sy = co.modCursorY + ydiff / 2;
+      const lx = co.modCursorX - xdiff / 2;
+      const ly = co.modCursorY - ydiff / 2;
       s.sx = () => sx;
       s.sy = () => sy;
       s.lx = () => lx;

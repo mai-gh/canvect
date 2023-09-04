@@ -16,6 +16,8 @@ const co = {
   cursorY: innerHeight / 2,
   snapCursorX: 0,
   snapCursorY: 0,
+  modCursorX: 0,
+  modCursorY: 0,
   showGrid: false,
   gridSize: 10,
   scale: 1,
@@ -149,6 +151,10 @@ co.draw = (ts) => {
     co.ctx.restore();
   }
 
+
+
+  //if snap to grid
+
   co.ctx.scale(1, 1);
     co.ctx.save();
     co.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -157,21 +163,21 @@ co.draw = (ts) => {
 
 
     if (Math.abs(co.cursorX % co.gridSize) < Math.trunc(co.gridSize / 2)) {
-      co.snapCursorX = co.cursorX - Math.abs(co.cursorX % co.gridSize);
+      co.snapCursorX = co.cursorX - Math.abs(co.cursorX % co.gridSize) + (co.baseOffset.x % co.gridSize);
     } else {
-      co.snapCursorX = co.cursorX - Math.abs(co.cursorX % co.gridSize) + co.gridSize;
+      co.snapCursorX = co.cursorX - Math.abs(co.cursorX % co.gridSize) + co.gridSize + (co.baseOffset.x % co.gridSize);
     }
     if (Math.abs(co.cursorY % co.gridSize) < Math.trunc(co.gridSize / 2)) {
-      co.snapCursorY = co.cursorY - Math.abs(co.cursorY % co.gridSize);
+      co.snapCursorY = co.cursorY - Math.abs(co.cursorY % co.gridSize) + (co.baseOffset.y % co.gridSize);
     } else {
-      co.snapCursorY = co.cursorY - Math.abs(co.cursorY % co.gridSize) + co.gridSize;
+      co.snapCursorY = co.cursorY - Math.abs(co.cursorY % co.gridSize) + co.gridSize + (co.baseOffset.y % co.gridSize);
     }
     
-    co.cursorX = co.snapCursorX
-    co.cursorY = co.snapCursorY
+    co.modCursorX = co.snapCursorX
+    co.modCursorY = co.snapCursorY
 
 
-    co.ctx.fillRect(co.snapCursorX, co.snapCursorY, 1, 1);
+    co.ctx.fillRect(co.modCursorX, co.modCursorY, 1, 1);
     co.ctx.restore();
 
   for (const f of co.funcQ) f.func();
