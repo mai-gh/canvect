@@ -1,3 +1,6 @@
+import {lineTemplate} from './line.js'
+import {deselectAll} from './select.js'
+
 export const expSVG = (co) => {
 
   const svgElem = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
@@ -60,3 +63,28 @@ export const expSVG = (co) => {
   console.log(svgElem.outerHTML)
 
 }
+
+export const impSVG = (input) => {
+  const template = document.createElement('template');
+  const html = input.trim();
+  template.innerHTML = html;
+  const svgElem = template.content.firstChild;
+  svgElem.childNodes.forEach((l) => {
+    if (l.tagName === 'line') {
+      const s = lineTemplate(co);
+      s.sx = () => Number(l.getAttribute('x1'));
+      s.sy = () => Number(l.getAttribute('y1'));
+      s.lx = () => Number(l.getAttribute('x2'));
+      s.ly = () => Number(l.getAttribute('y2'));
+      s.path = new Path2D();
+      s.path.moveTo(s.sx(), s.sy());
+      s.path.lineTo(s.lx(), s.ly());
+      s.editing = null;
+      co.clickCounter = 0;
+      deselectAll(co);      
+      co.funcQ.push(s);
+    }
+  })
+}
+
+window.impSVG = impSVG;
