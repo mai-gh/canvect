@@ -15,6 +15,16 @@ export const expSVG = (co) => {
       l.setAttribute('x2', p.lx());
       l.setAttribute('y2', p.ly());
       svgElem.appendChild(l);
+    } else if (p.type === "circle") {
+      const l = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+      l.style['stroke-width'] = 1;
+      l.style.stroke = 'blue';
+      l.style.fill = 'transparent';
+      l.setAttribute('cx', p.sx());
+      l.setAttribute('cy', p.sx());
+      l.setAttribute('rx', p.radius);
+      l.setAttribute('ry', p.radius);
+      svgElem.appendChild(l);
     }
   });
 
@@ -24,14 +34,22 @@ export const expSVG = (co) => {
   // translate so top left to x=0 y=0
   if (bb.x < 0) { 
     svgElem.childNodes.forEach((l)=>{
-      l.setAttribute('x1', Number(l.getAttribute('x1')) + Math.abs(bb.x));
-      l.setAttribute('x2', Number(l.getAttribute('x2')) + Math.abs(bb.x));
+      if (l.tagName === 'line') {
+        l.setAttribute('x1', Number(l.getAttribute('x1')) + Math.abs(bb.x));
+        l.setAttribute('x2', Number(l.getAttribute('x2')) + Math.abs(bb.x));
+      } else if (l.tagName === 'ellipse') {
+        l.setAttribute('cx', Number(l.getAttribute('cx')) + Math.abs(bb.x));
+      }
     })
   }
   if (bb.y < 0) { 
     svgElem.childNodes.forEach((l)=>{
-      l.setAttribute('y1', Number(l.getAttribute('y1')) + Math.abs(bb.y));
-      l.setAttribute('y2', Number(l.getAttribute('y2')) + Math.abs(bb.y));
+      if (l.tagName === 'line') {
+        l.setAttribute('y1', Number(l.getAttribute('y1')) + Math.abs(bb.y));
+        l.setAttribute('y2', Number(l.getAttribute('y2')) + Math.abs(bb.y));
+      } else if (l.tagName === 'ellipse') {
+        l.setAttribute('cy', Number(l.getAttribute('cy')) + Math.abs(bb.y));
+      }
     })
   }
 
