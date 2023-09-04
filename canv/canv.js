@@ -14,6 +14,8 @@ const co = {
   cursorY_base: innerHeight / 2,
   cursorX: innerWidth / 2,
   cursorY: innerHeight / 2,
+  snapCursorX: 0,
+  snapCursorY: 0,
   showGrid: false,
   gridSize: 10,
   scale: 1,
@@ -147,6 +149,30 @@ co.draw = (ts) => {
     co.ctx.restore();
   }
 
+  co.ctx.scale(1, 1);
+    co.ctx.save();
+    co.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    co.ctx.lineWidth = 0;
+    co.ctx.fillStyle = "yellow";
+
+
+    if (Math.abs(co.cursorX % co.gridSize) < Math.trunc(co.gridSize / 2)) {
+      co.snapCursorX = co.cursorX - Math.abs(co.cursorX % co.gridSize);
+    } else {
+      co.snapCursorX = co.cursorX - Math.abs(co.cursorX % co.gridSize) + co.gridSize;
+    }
+    if (Math.abs(co.cursorY % co.gridSize) < Math.trunc(co.gridSize / 2)) {
+      co.snapCursorY = co.cursorY - Math.abs(co.cursorY % co.gridSize);
+    } else {
+      co.snapCursorY = co.cursorY - Math.abs(co.cursorY % co.gridSize) + co.gridSize;
+    }
+    
+    co.cursorX = co.snapCursorX
+    co.cursorY = co.snapCursorY
+
+
+    co.ctx.fillRect(co.snapCursorX, co.snapCursorY, 1, 1);
+    co.ctx.restore();
 
   for (const f of co.funcQ) f.func();
   window.requestAnimationFrame(co.draw);

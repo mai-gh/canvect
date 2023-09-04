@@ -64,7 +64,7 @@ button:focus {outline:0;}
 #canv {
   position: absolute;
   left: calc(9.5%);
-  cursor: crosshair;
+  cursor: none;
   border: 1px solid darkkhaki;
   margin: .3em;
 /*  height: 98%; */
