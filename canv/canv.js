@@ -151,6 +151,7 @@ co.draw = (ts) => {
     co.ctx.restore();
   }
 
+  for (const f of co.funcQ) f.func();
 
 
   //if snap to grid
@@ -176,24 +177,23 @@ co.draw = (ts) => {
 
 
    if (Math.abs(co.cursorX % co.gridSize) < Math.trunc(co.gridSize / 2)) {
-     co.snapCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + (co.baseOffset.x % co.gridSize);
+     co.snapCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + (co.baseOffset.x % co.gridSize) - 1;
    } else {
-     co.snapCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + co.gridSize + (co.baseOffset.x % co.gridSize);
+     co.snapCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + co.gridSize + (co.baseOffset.x % co.gridSize) - 1;
    }
    if (Math.abs(co.cursorY % co.gridSize) < Math.trunc(co.gridSize / 2)) {
-     co.snapCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + (co.baseOffset.y % co.gridSize);
+     co.snapCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + (co.baseOffset.y % co.gridSize) - 1;
    } else {
-     co.snapCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + co.gridSize + (co.baseOffset.y % co.gridSize);
+     co.snapCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + co.gridSize + (co.baseOffset.y % co.gridSize) - 1;
    }
     
     co.modCursorX = co.snapCursorX
     co.modCursorY = co.snapCursorY
 
 
-    co.ctx.fillRect(co.modCursorX, co.modCursorY, 1, 1);
+    co.ctx.fillRect(co.modCursorX, co.modCursorY, 2, 2);
     co.ctx.restore();
 
-  for (const f of co.funcQ) f.func();
   window.requestAnimationFrame(co.draw);
 };
 

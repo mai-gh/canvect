@@ -88,10 +88,27 @@ table {
 }
 
 tr {
+  border-bottom: 1px solid #303030;
+}
+
+tr:last-of-type {
+  border-bottom: none;
 }
 
 td {
   font-family: monospace;
   vertical-align: middle;
+  text-align: center;
+  padding-top: .125em;
+  border-left: 1px solid #303030;
+}
+
+td:first-of-type {
+  padding-left: .3em;
+  border-left: none;
+}
+
+td:last-of-type {
+  padding-right: .3em;
 }
 

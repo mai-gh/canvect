@@ -10,12 +10,13 @@ document.addEventListener("DOMContentLoaded", function() {
   const cmdTbl = document.createElement("table");
   cmdTbl.id = "cmdTbl"
 //  cmdTbl.style.border = "1px solid blue"
-  for (let i of [1,2]) {
+  for (let i of [0,1]) {
     let tr = document.createElement("tr");
-    for (let j of [1,2,3,4]) {
+    for (let j of [0,1,2,3,4,5,6,7]) {
       let td = document.createElement("td");
       td.id = `cmdTblr${i}c${j}`;
-      td.innerText = `cmdTblr${i}c${j}`;
+      //td.innerText = `cmdTblr${i}c${j}`;
+      td.innerText = '~';
       tr.appendChild(td);
     }
     cmdTbl.appendChild(tr);
