@@ -47,12 +47,12 @@ co.canv.id = "canv";
 co.canv.onclick = handleClick(co);
 co.ctx = co.canv.getContext("2d");
 
-co.resizeCanv = () => {
-  co.canv.width = window.innerWidth * .895;
-  co.canv.height = window.innerHeight * .98;
-}
+//co.resizeCanv = () => {
+//  co.canv.width = window.innerWidth * .895;
+//  co.canv.height = window.innerHeight * .98;
+//}
 
-window.onresize = co.resizeCanv;
+//window.onresize = co.resizeCanv;
 
 //const offset = {x:0, y:0}
 let mouseDown = false;
