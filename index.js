@@ -7,6 +7,33 @@ document.addEventListener("DOMContentLoaded", function() {
 
   const rightDiv = document.createElement("div");
   const cmdDiv = document.createElement("div");
+  const cmdTbl = document.createElement("table");
+  cmdTbl.id = "cmdTbl"
+//  cmdTbl.style.border = "1px solid blue"
+  for (let i of [1,2]) {
+    let tr = document.createElement("tr");
+    for (let j of [1,2,3,4]) {
+      let td = document.createElement("td");
+      td.id = `cmdTblr${i}c${j}`;
+      td.innerText = `cmdTblr${i}c${j}`;
+      tr.appendChild(td);
+    }
+    cmdTbl.appendChild(tr);
+  }
+
+/*
+  [1,2].forEach((i)=>{
+    let tr = document.createElement("tr");
+    [1,2,3,4].forEach((j)=>{
+      let td = document.createElement("tr");
+      td.id = `cmdTblr${i}c${j}`;
+      tr.appendChild(td);
+    })
+    cmdTbl.appendChild(tr);
+  })
+*/
+
+  cmdDiv.appendChild(cmdTbl);
   rightDiv.id = 'rightDiv';
   cmdDiv.id = 'cmdDiv';
 
