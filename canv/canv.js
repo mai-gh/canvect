@@ -18,7 +18,7 @@ const co = {
   snapCursorY: 0,
   modCursorX: 0,
   modCursorY: 0,
-  showGrid: false,
+  showGrid: true,
   gridSize: 10,
   scale: 1,
   translatePos: { x: 0, y: 0 },
@@ -161,7 +161,7 @@ co.draw = (ts) => {
     co.ctx.lineWidth = 0;
     co.ctx.fillStyle = "yellow";
 
-
+/*
     if (Math.abs(co.cursorX % co.gridSize) < Math.trunc(co.gridSize / 2)) {
       co.snapCursorX = co.cursorX - Math.abs(co.cursorX % co.gridSize) + (co.baseOffset.x % co.gridSize);
     } else {
@@ -172,6 +172,19 @@ co.draw = (ts) => {
     } else {
       co.snapCursorY = co.cursorY - Math.abs(co.cursorY % co.gridSize) + co.gridSize + (co.baseOffset.y % co.gridSize);
     }
+*/
+
+
+   if (Math.abs(co.cursorX % co.gridSize) < Math.trunc(co.gridSize / 2)) {
+     co.snapCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + (co.baseOffset.x % co.gridSize);
+   } else {
+     co.snapCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + co.gridSize + (co.baseOffset.x % co.gridSize);
+   }
+   if (Math.abs(co.cursorY % co.gridSize) < Math.trunc(co.gridSize / 2)) {
+     co.snapCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + (co.baseOffset.y % co.gridSize);
+   } else {
+     co.snapCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + co.gridSize + (co.baseOffset.y % co.gridSize);
+   }
     
     co.modCursorX = co.snapCursorX
     co.modCursorY = co.snapCursorY
