@@ -45,8 +45,13 @@ document.addEventListener("DOMContentLoaded", function() {
   document.body.appendChild(genCPD(co));
   document.body.appendChild(rightDiv);
 
-  co.canv.width = co.canv.clientWidth;
-  co.canv.height = co.canv.clientHeight;
+  document.getElementById("Snap to Grid-Button").classList.add('toolButtonSelected');
+  document.getElementById("Show Grid-Button").classList.add('toolButtonSelected');
+
+  //co.canv.width = co.canv.clientWidth;
+  //co.canv.height = co.canv.clientHeight;
+
+  co.resizeCanv();
 
   window.requestAnimationFrame(co.draw);
 });

@@ -13,7 +13,15 @@ const options = {
       e.target.classList.remove('toolButtonSelected')
     }
   },
-  'Snap to Grid': (co) => (e) => {},
+  'Snap to Grid': (co) => (e) => {
+    if (co.snapToGrid === false) {
+      co.snapToGrid = true;
+      e.target.classList.add('toolButtonSelected')
+    } else {
+      co.snapToGrid = false;
+      e.target.classList.remove('toolButtonSelected')
+    }
+  },
   'Snap to Edges': (co) => (e) => {},
   'Import SVG': (co) => (e) => {},
   'Export SVG': (co) => (e) => {expSVG(co)},
