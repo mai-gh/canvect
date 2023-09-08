@@ -28,6 +28,18 @@ const co = {
 
 window.co = co;
 
+const updateStatus = (zone, text) => {
+  const el = document.getElementById(`cmdTbl_${zone}`);
+  el.innerText = text;
+}
+
+const updateStatusCo = (zone, entry) => {
+  const el = document.getElementById(`cmdTbl_${zone}`);
+  el.innerText = `${entry}: ${co[entry]}`;
+}
+
+
+
 document.addEventListener("mousemove", (e) => {
   co.cursorX_base = (Math.floor(e.clientX - co.canv.getBoundingClientRect().left)-1);
   co.cursorY_base = (Math.floor(e.clientY - co.canv.getBoundingClientRect().top)-1);
@@ -40,6 +52,51 @@ document.addEventListener("mousemove", (e) => {
 //          co.translatePos.x = evt.clientX - offset.x;
 //          co.translatePos.y = evt.clientY - offset.y;
 //  }
+
+  updateStatusCo('a0', 'cursorX');
+  updateStatusCo('b0', 'cursorY');
+
+  updateStatusCo('a1', 'cursorX_base');
+  updateStatusCo('b1', 'cursorY_base');
+
+  updateStatusCo('a2', 'modCursorX');
+  updateStatusCo('b2', 'modCursorY');
+
+  updateStatusCo('a3', 'snapCursorX');
+  updateStatusCo('b3', 'snapCursorY');
+
+  updateStatus('a4', `baseOffset.x: ${co.baseOffset.x}`);
+  updateStatus('b4', `baseOffset.y: ${co.baseOffset.y}`);
+
+  updateStatus('a5', `offset.x: ${co.offset.x}`);
+  updateStatus('b5', `offset.y: ${co.offset.y}`);
+
+
+
+/*
+baseOffset: Object { x: 0, y: 0 }
+canv: <canvas id="canv" width="1218" height="552">
+clickCounter: 0
+ctx: CanvasRenderingContext2D { globalAlpha: 1, globalCompositeOperation: "source-over", strokeStyle: "#000000", … }
+cursorX: 430
+cursorX_base: 430
+cursorY: 341
+cursorY_base: 341
+draw: function draw(ts)
+fps: 0
+funcQ: Array []
+gridSize: 10
+modCursorX: 429
+modCursorY: 339
+offset: Object { x: 0, y: 0 }
+oldTimeStamp: 0
+scale: 1
+secondsPassed: 0
+selectedTool: null
+showGrid: true
+snapCursorX: 429
+snapCursorY: 339
+*/
 
 });
 

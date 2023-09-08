@@ -3,6 +3,8 @@ import genCPD from './canv/controlPanel.js'
 
 // co stands for canvas object, its where we will be storing our state
 
+
+
 document.addEventListener("DOMContentLoaded", function() {
 
   const rightDiv = document.createElement("div");
@@ -10,13 +12,13 @@ document.addEventListener("DOMContentLoaded", function() {
   const cmdTbl = document.createElement("table");
   cmdTbl.id = "cmdTbl"
 //  cmdTbl.style.border = "1px solid blue"
-  for (let i of [0,1]) {
+  for (let i of ['a','b']) {
     let tr = document.createElement("tr");
     for (let j of [0,1,2,3,4,5,6,7]) {
       let td = document.createElement("td");
-      td.id = `cmdTblr${i}c${j}`;
+      td.id = `cmdTbl_${i}${j}`;
       //td.innerText = `cmdTblr${i}c${j}`;
-      td.innerText = '~';
+      td.innerText = `${i}${j}`;
       tr.appendChild(td);
     }
     cmdTbl.appendChild(tr);
