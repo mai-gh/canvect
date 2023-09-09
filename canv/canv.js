@@ -53,15 +53,15 @@ document.addEventListener("mousemove", (e) => {
   co.cursorY -= co.baseOffset.y
 
   if (co.snapToGrid) {
-   if (Math.abs(co.cursorX % co.gridSize) < Math.trunc(co.gridSize / 2)) {
-     co.modCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + (co.offset.x % co.gridSize);
+   if (Math.abs(co.cursorX % co.gridSize) <= Math.trunc(co.gridSize / 2)) {
+     co.modCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize);
    } else {
-     co.modCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + co.gridSize + (co.offset.x % co.gridSize);
+     co.modCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + co.gridSize;
    }
-   if (Math.abs(co.cursorY % co.gridSize) < Math.trunc(co.gridSize / 2)) {
-     co.modCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + (co.offset.y % co.gridSize);
+   if (Math.abs(co.cursorY % co.gridSize) <= Math.trunc(co.gridSize / 2)) {
+     co.modCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize);
    } else {
-     co.modCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + co.gridSize + (co.offset.y % co.gridSize);
+     co.modCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + co.gridSize;
    }
   } else {
     co.modCursorX = co.cursorX_base
@@ -192,7 +192,7 @@ co.draw = (ts) => {
     co.ctx.restore();
   }
 
-
+/*
         const s = lineTemplate(co);
         s.sx = () => 0;
         s.sy = () => 0;
@@ -205,7 +205,7 @@ co.draw = (ts) => {
         co.clickCounter = 0;
         deselectAll(co);
         co.funcQ.push(s);
-
+*/
 
   for (const f of co.funcQ) f.func();
 
@@ -216,7 +216,12 @@ co.draw = (ts) => {
   co.ctx.setTransform(1, 0, 0, 1, 0, 0);
   co.ctx.lineWidth = 0;
   co.ctx.fillStyle = "yellow";
-  co.ctx.fillRect(co.modCursorX - (co.cursorSize/2), co.modCursorY - (co.cursorSize/2), co.cursorSize, co.cursorSize);
+  co.ctx.fillRect(
+    co.modCursorX - (co.cursorSize/2) + (co.baseOffset.x % co.gridSize),
+    co.modCursorY - (co.cursorSize/2) + (co.baseOffset.y % co.gridSize),
+    co.cursorSize,
+    co.cursorSize
+  );
   co.ctx.restore();
 
   window.requestAnimationFrame(co.draw);
