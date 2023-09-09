@@ -11,12 +11,14 @@ const co = {
   oldTimeStamp: 0,
   secondsPassed: 0,
   fps: 0,
-  cursorX_base: 0,
-  cursorY_base: 0,
   cursorX: 0,
   cursorY: 0,
+  cursorX_base: 0,
+  cursorY_base: 0,
   modCursorX: 0,
   modCursorY: 0,
+  modCursorX_base: 0,
+  modCursorY_base: 0,
   showGrid: true,
   snapToGrid: true,
   gridSize: 10,
@@ -54,19 +56,24 @@ document.addEventListener("mousemove", (e) => {
 
   if (co.snapToGrid) {
    if (Math.abs(co.cursorX % co.gridSize) <= Math.trunc(co.gridSize / 2)) {
-     co.modCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize);
+     co.modCursorX_base = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize);
+     co.modCursorX = co.cursorX - Math.abs(co.cursorX % co.gridSize);
    } else {
-     co.modCursorX = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + co.gridSize;
+     co.modCursorX_base = co.cursorX_base - Math.abs(co.cursorX_base % co.gridSize) + co.gridSize;
+     co.modCursorX = co.cursorX - Math.abs(co.cursorX % co.gridSize) + co.gridSize;
    }
    if (Math.abs(co.cursorY % co.gridSize) <= Math.trunc(co.gridSize / 2)) {
-     co.modCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize);
+     co.modCursorY_base = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize);
+     co.modCursorY = co.cursorY - Math.abs(co.cursorY % co.gridSize);
    } else {
-     co.modCursorY = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + co.gridSize;
+     co.modCursorY_base = co.cursorY_base - Math.abs(co.cursorY_base % co.gridSize) + co.gridSize;
+     co.modCursorY = co.cursorY - Math.abs(co.cursorY % co.gridSize) + co.gridSize;
    }
   } else {
-    co.modCursorX = co.cursorX_base
-    co.modCursorY = co.cursorY_base
-     
+    co.modCursorX_base = co.cursorX_base
+    co.modCursorY_base = co.cursorY_base
+    co.modCursorX = co.cursorX
+    co.modCursorY = co.cursorY
   }
 });
 
@@ -81,6 +88,9 @@ window.setInterval(function () {
 
   updateStatusCo('a2', 'modCursorX');
   updateStatusCo('b2', 'modCursorY');
+
+  updateStatusCo('a3', 'modCursorX_base');
+  updateStatusCo('b3', 'modCursorY_base');
 
   updateStatus('a4', `offset.x: ${co.offset.x}`);
   updateStatus('b4', `offset.y: ${co.offset.y}`);
@@ -217,8 +227,8 @@ co.draw = (ts) => {
   co.ctx.lineWidth = 0;
   co.ctx.fillStyle = "yellow";
   co.ctx.fillRect(
-    co.modCursorX - (co.cursorSize/2) + (co.baseOffset.x % co.gridSize),
-    co.modCursorY - (co.cursorSize/2) + (co.baseOffset.y % co.gridSize),
+    co.modCursorX_base - (co.cursorSize/2) + (co.baseOffset.x % co.gridSize),
+    co.modCursorY_base - (co.cursorSize/2) + (co.baseOffset.y % co.gridSize),
     co.cursorSize,
     co.cursorSize
   );
