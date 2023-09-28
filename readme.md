@@ -1,1 +1,1 @@
-https://mai-gh.github.io/canv/
+https://canvect.com/
