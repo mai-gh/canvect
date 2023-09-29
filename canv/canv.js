@@ -124,7 +124,8 @@ co.resizeCanv = () => {
 window.onresize = co.resizeCanv;
 
 
-
+// disable Scroll for the moment
+/*
       // add event listeners to handle screen drag
       let mouseDown = false;
       co.canv.addEventListener("mousedown", function(evt) {
@@ -150,7 +151,7 @@ window.onresize = co.resizeCanv;
  //         draw(scale, translatePos);
         }
       });
-
+*/
 
 
 co.canv.onwheel = (e) => {
